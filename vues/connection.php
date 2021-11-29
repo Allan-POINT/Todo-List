@@ -1,20 +1,30 @@
-<!DOCTYPE html>
 <head>
 	<meta charset="utf8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
-	<title><?=$nomDuSite?> - connexion</title>
+	<link rel="stylesheet" href="styles/connection.css">
+	<title>Se connecter</title>
 </head>
 <body>
 	<main>
-		<h1>Connexion</h1>
-		<form method="post" action="">
-			<label>Pseudonyme: </label>
-			<input name="username" type="text" placeholder="Pseudonyme"/>
-			<br>
-			<label>Mot de passe: </label>
-			<input name="password" type="password" placeholder="Saisir votre mot de passe">
-			<br>
-			<input name="Connexion" type="submit"/>
-		</form>
+		<div>
+			<h1>Se Connecter</h1>
+			<form method="post" action="?connection">
+				<table>
+					<tr>
+						<td><label for="ps">Pseudo</label></td>
+						<td><input type="text" id="ps" name="pseudonyme"></td>
+					</tr>
+					<tr>
+						<td><label for="pw">Mot de passe</label></td>
+						<td><input type="password" id="pw" name="motDePasse"><br></td>
+					</tr>
+					<tr>
+						<td><label for="cls"></label><input type="reset" id="cls" value="Effacer"></td>
+						<td><label for="submit"></label><input type="submit" id="submit" name="veutSeConnecter" value="Valider"></td>
+					</tr>
+				</table>
+			</form>
+		</div>
 	</main>
 </body>
+</html>

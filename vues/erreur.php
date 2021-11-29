@@ -11,12 +11,14 @@
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach($erreurs as $erreur => $commentaire) :?>
-				<tr>
-					<td><?=$erreur?></td>
-					<td><?=$commentaire?></td>
-				</tr>
-			<?php endforeach;?>
+			<?php if(isset($erreurs)) : ?>
+				<?php foreach($erreurs as $erreur => $commentaire) :?>
+					<tr>
+						<td><?=$erreur?></td>
+						<td><?=$commentaire?></td>
+					</tr>
+				<?php endforeach;?>
+			<?php endif;?>
 		</tbody>
 	</table>
 </body>
