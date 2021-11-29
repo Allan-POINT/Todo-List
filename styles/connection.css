@@ -1,0 +1,57 @@
+html, body
+{
+	height: 100%;
+}
+
+body
+{
+	background-color: #7AA;
+}
+
+main
+{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+
+main div
+{
+	background-color: #8BBA;
+	margin-top: 17%;
+	margin-bottom: 17%;
+	padding: 16px;
+	border-radius: 16px;
+}
+input
+{
+	margin-bottom: 8px;
+}
+
+
+@media (max-width: 1000px) 
+{
+	form
+	{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	input
+	{
+		font-size: 50px;
+		height: 65px;
+		width: 100%;
+	}
+	td
+	{
+		display: block;
+		text-align: center;
+	}
+	body
+	{
+		font-size: 75px;
+	}
+}
