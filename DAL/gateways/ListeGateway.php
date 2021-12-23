@@ -31,6 +31,16 @@ class ListeGateway
 			":createur" => [$l->getCreateur(), PDO::PARAM_STR]
 		]);
 	}
+	public function inserer2(string $nom, string $createur)
+	{
+		$requette = "INSERT INTO _TodoList(nom, dateCreation, createur)
+			VALUES(:nom, NOW(), :createur)";
+		return $this->conn->executeQuery($requette, [
+			":nom" => [$nom, PDO::PARAM_STR],
+			":createur" => [$createur, PDO::PARAM_STR]
+		]);
+		
+	}
 
 	/*
 	 * Paramètres	: l => TodoList à supprimer de la base de données
@@ -39,9 +49,16 @@ class ListeGateway
 	 */
 	public function supprimer(TodoList $l) : bool 
 	{
-		$requete = "DELETE FROM _TodoList WHERE listeID=:id";
-		return $this->conn->executeQuery($requete,[
+		$requette = "DELETE FROM _TodoList WHERE listeID=:id";
+		return $this->conn->executeQuery($requette,[
 			":id"=>[$l->getID(), PDO::PARAM_INT]
+		]);
+	}
+	public function supprimerAvecListID(int $id)
+	{
+		$requette = "DELETE FROM _TodoList WHERE listeID=:id";
+		return $this->conn->executeQuery($requette, [
+			":id" => [$id, PDO::PARAM_INT]
 		]);
 	}
 
@@ -52,12 +69,24 @@ class ListeGateway
 	 */
 	public function modifier(TodoList $l) : bool
 	{
-		$requete="UPDATE _TodoList SET
-			nom=:n, public=:p";
-		return $this->conn->executeQuery($requete, [
+		$requette="UPDATE _TodoList SET
+			nom=:n WHERE listeID=:id";
+		return $this->conn->executeQuery($requette, [
 			":n" => [$l->getNom(), PDO::PARAM_STR],
+			":id" => [$l->getID(), PDO::PARAM_INT]
 
 		]);
+	}
+
+	public function modiferNomListe(int $id, string $nom) : bool
+	{
+		$requette = "UPDATE _TodoList 
+			SET nom=:n
+			WHERE listeID=:id";
+		return $this->conn->executeQuery($requette, array(
+			":n" => [$nom, PDO::PARAM_STR],
+			":id" => [$id, PDO::PARAM_INT]
+		));
 	}
 
 	/*
@@ -99,7 +128,7 @@ class ListeGateway
 	 * 		  nbTache	=> Nombre de tâches à afficher par pages
 	 * Retour	: Retourne un tableau de listes de taille maximale <nbTache> ordoné par nom de liste (ordre lexicographique)
 	 * Finalité	: Récuperer les todoLists en bases de données par ordre de lexicographique et les instancier
-	 */
+	 */	
 	public function listeParNom(int $page, int $nbListes) : iterable
 	{
 		$gwTache = new TacheGateway($this->conn);
@@ -140,10 +169,10 @@ class ListeGateway
 	{
 		$gwTache = new TacheGateway($this->conn);
 		$lites = array();
-		$requete = "SELECT * FROM _TodoList WHERE Createur = :c  LIMIT :p+:n, :n";
+		$requete = "SELECT * FROM _TodoList WHERE Createur = :c  LIMIT :p, :n";
 		$isOK=$this->conn->executeQuery($requete, [
 			":c" => [$createur, PDO::PARAM_STR],
-			":p" => [$page-1, PDO::PARAM_INT],
+			":p" => [($page-1)*$nbListes, PDO::PARAM_INT],
 			":n" => [$nbListes, PDO::PARAM_INT]
 		]);
 		if(!$isOK)
@@ -152,7 +181,7 @@ class ListeGateway
 		}
 
 		$res = $this->conn->getResults();
-		
+		$listes = array();
 		foreach($res as $liste)
 		{
 			$listes[] = new TodoList(

@@ -63,27 +63,25 @@ class CompteGateway
 	 * Retour	: Un tableau contenant tout les compte avec le pseudonyme <pseudo> (devrais avoir une taille entre 0 et 1)
 	 * Finalité	: Récupérer un Compte <pseudo> en base de données et l'instancier.
 	 */
-	public function getCompteParPseudo(string $pseudo) : iterable
+	public function getCompteParPseudo(string $pseudo) : ?Compte
 	{
-		$gw = new ListeGateway($this->conn());
+		$gw = new ListeGateway($this->conn);
 		$requete = "SELECT * FROM _Compte WHERE pseudonyme=:pseudo";
-		if(!$this->conn->executeQuerry($requete, [":pseudo" => [$pseudo, PDO::PARAM_STR]]))
+		if(!$this->conn->executeQuery($requete, [":pseudo" => [$pseudo, PDO::PARAM_STR]]))
 		{
 			return array();
 		}
 		$comptesSQL = $this->conn->getResults();
-		$comptes = array();
-		$listes = array();
-
-		foreach($comptesSQL as $compte)
+		if(sizeof($comptesSQL) != 0)
 		{
-			$comptes[] = new Compte(
-				$compte["pseudonyme"],
-				$compte["dateCreation"],
-				$gw->getListeParCreateur($compte["pseudonyme"]),
-				$compte["motDePasse"],
+			$compte = new Compte(
+				$comptesSQL[0]["pseudonyme"],
+				$comptesSQL[0]["dateCreation"],
+				$gw->getListeParCreateur(1, 10, $comptesSQL[0]["pseudonyme"]),
+				$comptesSQL[0]["motDePasse"],
 			);
-			return $comptes;
+			return $compte;
 		}
+		return null;
 	}
 }

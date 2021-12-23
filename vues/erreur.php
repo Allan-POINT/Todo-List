@@ -3,19 +3,18 @@
 	<title>ERREUR :/</title>
 </head>
 <body>
+	<?php require("vues/header.php");?>
 	<table>
 		<thead>
 			<tr>
 				<th>Erreur</th>
-				<th>Commentaire</th>
 			</tr>
 		</thead>
 		<tbody>
 			<?php if(isset($erreurs)) : ?>
-				<?php foreach($erreurs as $erreur => $commentaire) :?>
+				<?php foreach($erreurs as $erreur) :?>
 					<tr>
 						<td><?=$erreur?></td>
-						<td><?=$commentaire?></td>
 					</tr>
 				<?php endforeach;?>
 			<?php endif;?>

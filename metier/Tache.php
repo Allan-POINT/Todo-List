@@ -8,7 +8,7 @@ class Tache
 	private $tacheID;
 
 	// Constructeur
-	public function __construct(string $nom, bool $estFait=false, string $commentaire="", int $tacheID)
+	public function __construct(string $nom, bool $estFait=false, ?string $commentaire="", int $tacheID)
 	{	
 		$this->nom = $nom;
 		$this->fait = $estFait;
@@ -28,7 +28,7 @@ class Tache
 		$this->nom = $nouveauNom;
 	}
 
-	public function getCommentaire() : string
+	public function getCommentaire() : ?string
 	{
 		return $this->commentaire;
 	}

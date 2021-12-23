@@ -8,7 +8,7 @@
 	<main>
 		<div>
 			<h1>Se Connecter</h1>
-			<form method="post" action="?connection">
+			<form method="POST" action="?action=connection">
 				<table>
 					<tr>
 						<td><label for="ps">Pseudo</label></td>
