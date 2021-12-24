@@ -27,6 +27,15 @@ class CompteGateway
 			":mdp" => [$compteAInserer->getMotDePasse(), PDO::PARAM_STR]
 		]);
 	}
+	public function inscription(string $pseudo, string $mdp_H) : bool
+	{
+		$requette = "INSERT INTO _Compte(pseudonyme, dateCreation, motDePasse)
+			VALUES(:p, NOW(), :mdp)";
+		return $this->conn->executeQuery($requette, array(
+			":p" => [$pseudo, PDO::PARAM_STR],
+			":mdp" => [$mdp_H, PDO::PARAM_STR]
+		));
+	}
 
 	/*
 	 * Paramètre	: compteAEditer => Compte à éditer en base de données

@@ -40,11 +40,11 @@ class ModelConnecte
 		return $gw->getListeParCreateur($page, $nbElements, $pseudo);
 	}
 
-	public function getTaches(int $liste)
+	public function getTaches(int $liste, $page, $nbElements)
 	{
 		global $dsn, $loginDB, $pswdDB;
 		$gw = new TacheGateway(new Connection($dsn, $loginDB, $pswdDB));
-		return $taches = $gw->getTachesParIDListe($liste, 1, 10);
+		return $taches = $gw->getTachesParIDListe($liste, $page, $nbElements);
 	}
 
 	public function setDoneTaches()
@@ -126,5 +126,32 @@ class ModelConnecte
 		$gw = new TacheGateway(new Connection($dsn, $loginDB, $pswdDB));
 		return $gw->modifierNomCommTache($idTache, $nom, $comm);
 	}
-	
+	public function inscription(string $pseudo, string $mdp) : bool
+	{
+		global $dsn, $loginDB, $pswdDB;
+		$mdp_H = password_hash($mdp, PASSWORD_BCRYPT);
+		$gw = new CompteGateway(new Connection($dsn, $loginDB, $pswdDB));
+		return $gw->Inscription($pseudo, $mdp_H,);
+		
+	}
+	public function getNomListe(int $id): string
+	{
+		global $dsn, $loginDB, $pswdDB;
+		$gw = new ListeGateway(new Connection($dsn, $loginDB, $pswdDB));
+		return $gw->getListeParID($id)->getNom();
+	}
+	public function getMaxPageTaches(int $listeID, int $nbElements) : int
+	{
+		global $dsn, $loginDB, $pswdDB;
+		$gw = new TacheGateway(new Connection($dsn, $loginDB, $pswdDB));
+		$nbTotal = $gw->getNbTacheParListeID($listeID);
+		return ceil($nbTotal/$nbElements);
+	}
+	public function getMaxPageListes(string $createur, int $nbElements) : int
+	{
+		global $dsn, $loginDB, $pswdDB;
+		$gw = new ListeGateway(new Connection($dsn, $loginDB, $pswdDB));
+		$nbTotal = $gw->getNbListesParCreateur($createur);
+		return ceil($nbTotal/$nbElements);
+	}
 }

@@ -24,6 +24,7 @@
 					</tr>
 				</table>
 			</form>
+			<a href="?action=veuxSInscrire">S'inscrire</a>
 		</div>
 	</main>
 </body>

@@ -129,7 +129,7 @@ class ListeGateway
 	 * Retour	: Retourne un tableau de listes de taille maximale <nbTache> ordoné par nom de liste (ordre lexicographique)
 	 * Finalité	: Récuperer les todoLists en bases de données par ordre de lexicographique et les instancier
 	 */	
-	public function listeParNom(int $page, int $nbListes) : iterable
+	public function listeParNom(int $page, int $nbListes) : array
 	{
 		$gwTache = new TacheGateway($this->conn);
 		$lites = array();
@@ -156,6 +156,34 @@ class ListeGateway
 			);
 		}
 		return $listes;
+	}
+
+	public function getListeParID(int $id): TodoList
+	{
+		$gwTache = new TacheGateway($this->conn);
+		$requete = "SELECT * FROM _TodoList WHERE listeID = :id";
+		$isOK=$this->conn->executeQuery($requete, [
+			":id" => [$id, PDO::PARAM_INT]
+		]);
+		if(!$isOK)
+		{
+			throw new Exception("Erreur avec la récupération de la liste n°$id");
+		}
+
+		$liste = $this->conn->getResults();
+		if(sizeof($liste) == 0)
+		{
+			throw new Exception("Aucune liste n°$id");
+		}
+		$liste = $liste[0];
+		
+		return new TodoList(
+				$liste["listeID"],
+				$liste["nom"],
+				$liste["Createur"],
+				$liste["dateCreation"],
+				$gwTache->getTachesParIDListe($liste["listeID"], 1, 10)
+		);
 	}
 	
 	/*
@@ -208,4 +236,15 @@ class ListeGateway
 		$l->setTaches($gwTaches->getTachesParIDListe($l->getID(), $page, $nbTaches));
 		return $l;
 	}
+	public function getNbListesParCreateur(string $createur): int
+	{
+		$requette = "SELECT COUNT(*) FROM _TodoList WHERE Createur = :c";
+		if(!$this->conn->executeQuery($requette, array(":c"=>[$createur, PDO::PARAM_STR])))
+		{
+			throw new Exception("Problème lors de la récupération des listes");
+		}
+		return $this->conn->getResults()[0][0];
+
+	}
+	
 }

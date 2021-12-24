@@ -91,13 +91,13 @@ class ControleurConnecte {
 
 	function seeLists()
 	{
-		if(!isset($_GET["page"]) || empty($_GET["page"]))
+		if(!isset($_REQUEST["page"]) || empty($_REQUEST["page"]))
 		{
 			$page = 1;
 		}
 		else
 		{
-			$page = Validation::validerUnIntSuperieurZero($_GET["page"]) ? $_GET["page"] : 1;
+			$page = Validation::validerUnIntSupperieurZero($_REQUEST["page"]) ? $_REQUEST["page"] : 1;
 		}
 
 		if(!isset($_GET["nbElements"]) || empty($_GET["nbElements"]))
@@ -106,11 +106,12 @@ class ControleurConnecte {
 		}
 		else
 		{
-			$nbElements = Validation::validerUnIntSuperieurZero($_GET["nbElements"]) ? $_GET["nbElements"] : 10;
+			$nbElements = Validation::validerUnIntSupperieurZero($_GET["nbElements"]) ? $_GET["nbElements"] : 10;
 		}
 
 		$mdl = new ModelConnecte();
-		$todoLists = $mdl->getLists($_SESSION["login"], $page, $nbElements);
+		$todoLists = $mdl->getLists(Validation::netoyerString($_SESSION["login"]), $page, $nbElements);
+		$maxPage = $mdl->getMaxPageListes(Validation::netoyerString($_SESSION["login"]), $nbElements);
 		require("vues/accueil.php");
 	}
 
@@ -125,9 +126,28 @@ class ControleurConnecte {
 		{
 			throw new Exception("Valeur illégale de la liste requétée");
 		}
+		if(!isset($_REQUEST["page"]) || empty($_REQUEST["page"]))
+		{
+			$page = 1;
+		}
+		else
+		{
+			$page = Validation::validerUnIntSupperieurZero($_REQUEST["page"]) ? $_REQUEST["page"] : 1;
+		}
+
+		if(!isset($_GET["nbElements"]) || empty($_GET["nbElements"]))
+		{
+			$nbElements = 10;
+		}
+		else
+		{
+			$nbElements = Validation::validerUnIntSupperieurZero($_GET["nbElements"]) ? $_GET["nbElements"] : 10;
+		}
 		$mdl = new ModelConnecte();
-		$taches = $mdl->getTaches($_REQUEST["list"]);
+		$taches = $mdl->getTaches($_REQUEST["list"], $page, $nbElements);
 		$actualList = $_REQUEST["list"];
+		$nomListe = $mdl->getNomListe($actualList);
+		$maxPage = $mdl->getMaxPageTaches($actualList, $nbElements);
 		require("vues/editeurDeStatuts.php");
 	}
 

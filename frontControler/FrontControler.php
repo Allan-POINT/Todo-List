@@ -11,7 +11,7 @@ class FrontControler
 			"addList", "setTacheFait", "editionTache", "déconéction", "seeLists", 
 			"seeList", "wantAddList", "wantAddTask", "addTask", "supprimerListe", 
 			"delTask", "logout", "veuxModifierListe", "modifyList", "veuxModifierTache"],
-		"Visiteur" => ["seConnceter", "connection"]
+		"Visiteur" => ["seConnceter", "connection", "veuxSInscrire", "signin"]
 	);
 
 	public function start()

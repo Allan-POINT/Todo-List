@@ -21,29 +21,30 @@ class TacheGateway
 	 */
 	public function inserer(Tache $tacheAInserer) : bool
 	{
-		$requette = "INSERT INTO _Tache(NomTache, TacheFaite, Commentaire) VALUES(
-			:nom, :fait, :commentaire
+		$requette = "INSERT INTO _Tache(NomTache, TacheFaite, Commentaire, DateCreation, listeID) VALUES(
+			:nom, :fait, :commentaire, NOW(), :id
 			)";
 
 		return $this->conn->executeQuery($requette, [
 			':nom' => [$tacheAInserer->nom, PDO::PARAM_STR],
 			':fait'=> [$tacheAInserer->estFait, PDO::PARAM_BOOL],
 			':commentaire' => [$tacheAInserer->commentaire, PDO::PARAM_STR],
+			':id' => [$tacheAInserer->getListeID(), PDO::PARAM_INT]
 
 		]);
 	}
 
-	public function insererSimple(string $nom, string $comm, int $id) : bool
+	public function insererSimple(string $nom, string $comm, int $listeID) : bool
 	{
-		$requette = "INSERT INTO _Tache(NomTache, TacheFaite, Commentaire, listID) VALUES(
-			:nom, :fait, :commentaire, :id
+		$requette = "INSERT INTO _Tache(NomTache, TacheFaite, Commentaire, listID, DateCreation) VALUES(
+			:nom, :fait, :commentaire, :id, NOW()
 			)";
 
 		return $this->conn->executeQuery($requette, [
 			":nom" => [$nom, PDO::PARAM_STR],
 			":fait"=> [false, PDO::PARAM_BOOL],
 			":commentaire" => [$comm, PDO::PARAM_STR],
-			":id" => [$id, PDO::PARAM_INT]
+			":id" => [$listeID, PDO::PARAM_INT]
 
 		]);
 		
@@ -123,7 +124,7 @@ class TacheGateway
 	 */
 	public function getTachesParIDListe(int $l, int $page, int $nbTache) : iterable
 	{
-		$requete = "SELECT * FROM _Tache WHERE listID=:id ORDER BY NomTache LIMIT :p, :n";
+		$requete = "SELECT * FROM _Tache WHERE listID=:id ORDER BY DateCreation DESC LIMIT :p, :n";
 		if(!$this->conn->executeQuery($requete,[ 
 			":id" => [$l, PDO::PARAM_INT],
 			":p" => [($page-1)*$nbTache, PDO::PARAM_INT],
@@ -141,7 +142,9 @@ class TacheGateway
 				$tache["NomTache"],
 				$tache["TacheFaite"],
 				$tache["Commentaire"],
-				$tache["tacheID"]
+				$tache["tacheID"],
+				$tache["DateCreation"],
+				$tache["listID"]
 			);
 		}
 		return $taches;
@@ -159,5 +162,15 @@ class TacheGateway
 			throw new Exception("Problème lors de la récupération de la liste de la tache $tache");
 		}
 		return $this->conn->getResults()[0][0];
+	}
+	public function getNbTacheParListeID(int $listeID): int
+	{
+		$requette = "SELECT COUNT(*) FROM _Tache WHERE listID = :id";
+		if(!$this->conn->executeQuery($requette, array(":id"=>[$listeID, PDO::PARAM_INT])))
+		{
+			throw new Exception("Problème lors de la récupération des taches");
+		}
+		return $this->conn->getResults()[0][0];
+
 	}
 }

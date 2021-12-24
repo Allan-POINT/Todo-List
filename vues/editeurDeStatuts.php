@@ -13,6 +13,9 @@
 </header>
 
 <main>
+	<?php if(isset($nomListe)) : ?>
+		<h1><?=$nomListe?></h1>
+	<?php endif;?>
 	<form method="post" action="?action=setTacheFait">
 		<table>
 			<thead>
@@ -32,8 +35,8 @@
 							<td><input name="estFait[]" type="checkbox" value="<?=$tache->getID()?>" <?=$tache->estFait() ? "checked" : ""?>/></td>
 							<td><?=$tache->getNom()?></td>
 							<td><?=$tache->getCommentaire()?></td>
-							<td><a href="?action=delTask&task=<?=$tache->getID()?>&list=<?=$actualList?>">À remplacer par une image de poubelle (^u^)"</a></td>
-							<td><a href="?action=veuxModifierTache&task=<?=$tache->getID()?>&list=<?=$actualList?>">À remplacer par une image de stylo (^u^")</a></td>
+							<td><a href="?action=delTask&task=<?=$tache->getID()?>&list=<?=$actualList?>"><img alt="Supprimer" src="ressources/imgs/trash.png"/></a></td>
+							<td><a href="?action=veuxModifierTache&task=<?=$tache->getID()?>&list=<?=$actualList?>"><img alt="Modifier" src="ressources/imgs/pen.png"/></a></td>
 							<td><input name="exist[]" type="hidden" value="<?=$tache->getID()?>"?></td>
 						</tr>
 					<?php endforeach;?>
@@ -48,6 +51,14 @@
 		<input value="Décocher toutes les cases" type="reset"/>
 		<input value="Sauvegarder l'étât!" type="submit"/>
 	</form>
+	<?php if(isset($actualList) && isset($page) && isset($nbElements) && isset($maxPage)) :?>
+		<?php if($maxPage != 1) :?>
+			<a href="?action=seeList&list=<?=$actualList?>&page=<?=$page==1 ?1:$page-1 ?>&nbElements=<?=$nbElements?>"><?=$page==1?1:"&larr;"?></a>
+			<a href="?action=seeList&list=<?=$actualList?>&page=<?=$page==$maxPage ?$maxPage:$page+1 ?>&nbElements=<?=$nbElements?>"><?=$page==$maxPage?$maxPage:"&rarr;"?></a>
+		<?php endif;?>
+	<?php endif;?>
+		
+	
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
