@@ -40,9 +40,9 @@
 			</tbody>
 		<table>
 		<?php if(isset($page) && isset($nbElements) && isset($maxPage)) :?>
-			<?php if($maxPage != 1) :?>
+			<?php if($maxPage > 1) :?>
 				<a href="?action=seeLists&page=<?=$page==1 ?1:$page-1 ?>&nbElements=<?=$nbElements?>"><?=$page==1?1:"&larr;"?></a>
-				<a href="?action=seeLists&page=<?=$page==$maxPage ?$maxPage:$page+1 ?>&nbElements=<?=$nbElements?>"><?=$page==$maxPage?$maxPage:"&rarr;"?></a>
+				<a href="?action=seeLists&page=<?=$page==$maxPage ?$maxPage:$page+1 ?>&nbElements=<?=$nbElements?>"><?=$page>=$maxPage?$maxPage:"&rarr;"?></a>
 			<?php endif;?>
 		<?php endif;?>
 	</main>

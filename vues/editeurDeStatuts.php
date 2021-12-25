@@ -52,9 +52,9 @@
 		<input value="Sauvegarder l'étât!" type="submit"/>
 	</form>
 	<?php if(isset($actualList) && isset($page) && isset($nbElements) && isset($maxPage)) :?>
-		<?php if($maxPage != 1) :?>
+		<?php if($maxPage > 1) :?>
 			<a href="?action=seeList&list=<?=$actualList?>&page=<?=$page==1 ?1:$page-1 ?>&nbElements=<?=$nbElements?>"><?=$page==1?1:"&larr;"?></a>
-			<a href="?action=seeList&list=<?=$actualList?>&page=<?=$page==$maxPage ?$maxPage:$page+1 ?>&nbElements=<?=$nbElements?>"><?=$page==$maxPage?$maxPage:"&rarr;"?></a>
+			<a href="?action=seeList&list=<?=$actualList?>&page=<?=$page==$maxPage ?$maxPage:$page+1 ?>&nbElements=<?=$nbElements?>"><?=$page>=$maxPage?$maxPage:"&rarr;"?></a>
 		<?php endif;?>
 	<?php endif;?>
 		
