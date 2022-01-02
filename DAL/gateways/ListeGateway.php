@@ -31,7 +31,7 @@ class ListeGateway
 			":createur" => [$l->getCreateur(), PDO::PARAM_STR]
 		]);
 	}
-	public function inserer2(string $nom, string $createur)
+	public function inserer2(string $nom, string $createur) : bool
 	{
 		$requette = "INSERT INTO _TodoList(nom, dateCreation, createur)
 			VALUES(:nom, NOW(), :createur)";
